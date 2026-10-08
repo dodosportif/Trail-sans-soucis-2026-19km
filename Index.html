@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Trail 19km">
+<title>Trail 19km 400D+</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#F2F2F7;color:#1C1C1E;overscroll-behavior:none}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:#F2F2F7}
+.hdr{background:#fff;padding:12px 16px 10px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:0.5px solid #C6C6C8;position:sticky;top:0;z-index:100}
+.hdr-row{display:flex;justify-content:space-between;align-items:center}
+.hdr h1{font-size:17px;font-weight:600;letter-spacing:-0.3px}
+.hdr-sub{font-size:12px;color:#8E8E93;margin-top:2px}
+.phase-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.tab-bar{display:flex;background:#fff;border-bottom:0.5px solid #C6C6C8}
+.tab-btn{flex:1;padding:10px 4px;font-size:13px;background:none;border:none;border-bottom:2.5px solid transparent;color:#8E8E93;cursor:pointer;font-family:inherit}
+.tab-btn.active{color:#007AFF;border-bottom-color:#007AFF;font-weight:500}
+.content{padding:12px 12px 88px}
+.section{display:none}.section.active{display:block}
+.sess-card{border-radius:13px;border:1.5px solid;overflow:hidden;margin-bottom:14px}
+.sess-head{padding:14px 16px;border-bottom:0.5px solid rgba(0,0,0,0.1)}
+.sess-date{font-size:11px;color:#8E8E93;margin-bottom:3px}
+.sess-title{font-size:17px;font-weight:600;letter-spacing:-0.3px;margin-bottom:10px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid}
+.blocs{padding:10px 14px}
+.bloc{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.08)}
+.bloc:last-child{border:none}
+.b-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.b-info{flex:1;min-width:0}
+.b-name{font-size:14px;font-weight:600}
+.b-dur{font-size:12px;color:#8E8E93;margin-top:2px}
+.b-desc{font-size:12px;color:#3C3C43;margin-top:4px;line-height:1.5}
+.garmin-box{margin:0 14px 12px;background:#EBF3FF;border-radius:10px;padding:11px 13px;border:0.5px solid #90BFF9}
+.garmin-ttl{font-size:11px;color:#007AFF;font-weight:600;margin-bottom:7px}
+.g-step{display:flex;gap:8px;font-size:12px;padding:2px 0;color:#1C1C1E}
+.g-step span:first-child{color:#8E8E93;min-width:96px;font-size:11px}
+.g-note{font-size:11px;color:#C0392B;font-weight:600;margin-top:7px}
+.key-tip{margin:0 14px 14px;background:#FFF0F0;border-radius:10px;padding:10px 13px;border:0.5px solid #FFB3B3}
+.key-tip p{font-size:12px;color:#C0392B;line-height:1.5}
+.j-section-title{font-size:13px;font-weight:500;color:#8E8E93;margin-bottom:8px;padding:0 2px}
+.j-slider{background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.j-slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.j-lbl{font-size:12px;color:#8E8E93;font-weight:500}
+.j-val{font-size:20px;font-weight:600;color:#1C1C1E}
+.j-slider input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:#E5E5EA;outline:none}
+.j-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#007AFF;cursor:pointer;box-shadow:0 2px 4px rgba(0,122,255,0.3)}
+.j-field{background:#fff;border-radius:10px;overflow:hidden;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.j-flbl{font-size:11px;color:#8E8E93;font-weight:500;padding:10px 14px 3px}
+.j-input{width:100%;border:none;background:transparent;padding:3px 14px 11px;font-size:15px;color:#1C1C1E;font-family:inherit;outline:none;resize:none}
+.alert-box{background:#FFF0F0;border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:12px;color:#C0392B;border:0.5px solid #FFB3B3;display:none}
+.save-btn{width:100%;padding:15px;background:#007AFF;color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
+.save-btn:active{background:#0062CC}
+.saved-msg{text-align:center;font-size:13px;color:#34C759;margin-top:10px;display:none;font-weight:500}
+.week-grp{margin-bottom:18px}
+.week-lbl{font-size:12px;color:#8E8E93;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:7px;padding:0 2px}
+.cal-row{border-radius:11px;border:1.5px solid;padding:11px 13px;margin-bottom:7px;display:flex;gap:10px;align-items:center;cursor:pointer;background:#fff;-webkit-tap-highlight-color:transparent}
+.cal-row:active{opacity:0.7}
+.cal-row.today-row{box-shadow:0 0 0 2.5px #007AFF}
+.cal-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.c-mar{background:#007AFF}.c-jeu{background:#34C759}.c-sam{background:#FF3B30}
+.cal-info{flex:1;min-width:0}
+.cal-date{font-size:11px;color:#8E8E93}
+.cal-type{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-meta{font-size:11px;color:#8E8E93;margin-top:2px}
+.badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;flex-shrink:0}
+.b-ok{background:#E8F5E9;color:#2E7D32}
+.b-miss{background:#FFEBEE;color:#C62828}
+.b-today{background:#E3F2FD;color:#1565C0}
+.hist-card{background:#fff;border-radius:13px;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.hist-head{padding:11px 14px;border-bottom:0.5px solid #E5E5EA;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hist-date-lbl{font-size:11px;color:#8E8E93}
+.hist-ttl{font-size:14px;font-weight:600}
+.hist-body{padding:9px 14px;font-size:13px;color:#3C3C43;line-height:1.5}
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:rgba(255,255,255,0.95);border-top:0.5px solid #C6C6C8;padding-bottom:max(8px,env(safe-area-inset-bottom));z-index:100;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.nav-btn{flex:1;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;color:#8E8E93;font-size:10px;font-family:inherit;font-weight:500}
+.nav-btn.active{color:#007AFF}
+.nav-icon{font-size:24px;line-height:1}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <div class="hdr-row">
+    <h1>🏔️ Trail 19km 400D+</h1>
+    <span class="phase-pill" id="hdr-badge">Récup</span>
+  </div>
+  <div class="hdr-sub" id="hdr-sub">Race day : dim. 22 nov. 2026</div>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('today')">Aujourd'hui</button>
+  <button class="tab-btn" onclick="switchTab('calendar')">Calendrier</button>
+  <button class="tab-btn" onclick="switchTab('journal')">Journal</button>
+</div>
+<div class="content">
+  <div class="section active" id="tab-today">
+    <div id="today-content"></div>
+    <div id="journal-form">
+      <div class="j-section-title">📝 Remplir après la séance</div>
+      <div class="j-slider">
+        <div class="j-slider-top"><span class="j-lbl">Douleur mollet</span><span class="j-val" id="sv1">0<span style="font-size:14px;color:#8E8E93">/10</span></span></div>
+        <input type="range" min="0" max="10" value="0" step="1" oninput="document.getElementById('sv1').innerHTML=this.value+'<span style=font-size:14px;color:#8E8E93>/10</span>';checkDouleur(this.value)">
+      </div>
+      <div class="j-slider">
+        <div class="j-slider-top"><span class="j-lbl">Fatigue générale</span><span class="j-val" id="sv2">0<span style="font-size:14px;color:#8E8E93">/10</span></span></div>
+        <input type="range" min="0" max="10" value="0" step="1" oninput="document.getElementById('sv2').innerHTML=this.value+'<span style=font-size:14px;color:#8E8E93>/10</span>'">
+      </div>
+      <div class="alert-box" id="douleur-alert">⚠️ Douleur ≥ 4/10 → réduire intensité et/ou durée · Consulter si persistant</div>
+      <div class="j-field"><div class="j-flbl">D+ réel effectué (m)</div><input class="j-input" type="text" placeholder="ex : 220 m" id="ji-deniv"></div>
+      <div class="j-field"><div class="j-flbl">Durée réelle (min)</div><input class="j-input" type="number" placeholder="ex : 45" id="ji-dur"></div>
+      <div class="j-field"><div class="j-flbl">Ressenti global</div><textarea class="j-input" rows="2" placeholder="Comment s'est passée la séance ?" id="ji-ressenti"></textarea></div>
+      <div class="j-field"><div class="j-flbl">Notes libres</div><textarea class="j-input" rows="2" placeholder="Conditions, équipement, gel testé..." id="ji-notes"></textarea></div>
+      <button class="save-btn" onclick="saveEntry()">Enregistrer la séance</button>
+      <div class="saved-msg" id="saved-msg">✅ Séance enregistrée</div>
+    </div>
+  </div>
+  <div class="section" id="tab-calendar"><div id="cal-content"></div></div>
+  <div class="section" id="tab-journal"><div id="journal-hist"></div></div>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn active" id="nav-today" onclick="switchTab('today')"><span class="nav-icon">🏃</span>Aujourd'hui</button>
+  <button class="nav-btn" id="nav-calendar" onclick="switchTab('calendar')"><span class="nav-icon">📅</span>Calendrier</button>
+  <button class="nav-btn" id="nav-journal" onclick="switchTab('journal')"><span class="nav-icon">📓</span>Journal</button>
+</div>
+</div>
+
+<script>
+var SESSIONS=[
+  // ── S1 RÉCUP ──────────────────────────────────────────────────────────────
+  {key:'Mar06-10',date:'2026-10-06',label:'Mardi 6 octobre',phase:'recup',weekLbl:'Semaine 1 — Récup post 10K',dot:'c-mar',
+   title:'Récup active — Foulée légère',dur:'25 min',den:'0 m',zone:'Zone 1-2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Activation',dur:'5 min · Zone 1',desc:'Marche rapide · Étirements dynamiques doux'},
+          {em:'🏃',bg:'#EBF3FF',nm:'Foulée légère',dur:'15 min · Zone 1-2',desc:'Allure très confortable · Médio-pied · 180ppm · Terrain plat uniquement'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour calme',dur:'5 min · Zone 1',desc:'Marche · Étirements mollets 5 min minimum'}],
+   garmin:[['Échauffement','5 min · —'],['Intervalle','15 min · Zone FC 1-2'],['Récupération','5 min · —']],
+   gnote:'Pas de répétition · Si fatigue → marche uniquement',
+   cle:'🟢 Ne pas forcer · Mollets post-10K sollicités · Réduire à marche si lourdeur',past:null},
+
+  {key:'Jeu08-10',date:'2026-10-08',label:'Jeudi 8 octobre',phase:'recup',weekLbl:'Semaine 1 — Récup post 10K',dot:'c-jeu',
+   title:'EF légère + mobilité',dur:'30 min',den:'0 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Activation',dur:'5 min · Zone 1',desc:'Marche rapide · Mobilisation hanches'},
+          {em:'🏃',bg:'#EBF3FF',nm:'EF continue',dur:'20 min · Zone 2',desc:'Course plat · Allure conversation facile · FC Zone 2 max'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour + mobilité',dur:'5 min',desc:'Marche · Étirements statiques 10 min après · Soléaire + gastros + IJ'}],
+   garmin:[['Échauffement','5 min · Zone FC 1'],['Intervalle','20 min · Zone FC 2'],['Récupération','5 min · —']],
+   gnote:'Pas de répétition · Évaluer récupération post 10K',
+   cle:'🟢 Observer quadriceps et mollets · Si lourdeur → réduire à 20 min',past:null},
+
+  {key:'Sam10-10',date:'2026-10-10',label:'Samedi 10 octobre',phase:'recup',weekLbl:'Semaine 1 — Récup post 10K',dot:'c-sam',
+   title:'Sortie récup — terrain naturel plat',dur:'40 min',den:'0 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route EF',dur:'10 min · Zone 2',desc:'Route plat · Progressif'},
+          {em:'⛰️',bg:'#E8F5E9',nm:'Trail plat',dur:'20 min · Zone 2',desc:'Terrain souple · Plat · Pas de côte · Boire · Appuis naturels'},
+          {em:'🌿',bg:'#F3E5F5',nm:'Route retour',dur:'10 min · Zone 1',desc:'Route calme · Finir marche 3 min'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','20 min · Zone FC 2'],['Récupération','10 min · Zone FC 1']],
+   gnote:'Pas de répétition · 0 D+ · Sortie récup post 10K et post trail 15km',
+   cle:'🟢 Dernière sortie récup · Plaisir avant tout · Si lourdes → réduire à 30 min',past:null},
+
+  // ── S2 BASES ──────────────────────────────────────────────────────────────
+  {key:'Mar13-10',date:'2026-10-13',label:'Mardi 13 octobre',phase:'base',weekLbl:'Semaine 2 — Bases trail',dot:'c-mar',
+   title:'Côtes courtes 6×1min — rappel technique',dur:'40 min',den:'80 m',zone:'Zone 2-3',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Échauffement EF',dur:'10 min · Zone 2',desc:'Course plat · Progressif · Cadence 180ppm'},
+          {em:'🔁',bg:'#E8F5E9',nm:'Répétitions côtes',dur:'18 min · Zone 2-3',desc:'6× montée 1 min côte douce (5-8%) + descente jogging récup 1 min 30\n→ Montée : petits pas · cadence haute · penché en avant · bras actifs\n→ Descente jogging : freinage quad · pieds sous le corps · pas courts'},
+          {em:'🌿',bg:'#F3E5F5',nm:'Retour EF',dur:'12 min · Zone 2',desc:'Course plat retour · Finir marche 3 min'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','1 min · Zone FC 2-3 — montée'],['Récupération','1 min 30 · Zone FC 1-2 — descente jogging'],['Récup. finale','12 min · Zone FC 2']],
+   gnote:'🔁 Répéter 6 fois · Rappel technique après 3 sem sans D+',
+   cle:'🔵 Montée = petits pas rapides · Descente = freinage quad · Réhabituer les chevilles',past:null},
+
+  {key:'Jeu15-10',date:'2026-10-15',label:'Jeudi 15 octobre',phase:'base',weekLbl:'Semaine 2 — Bases trail',dot:'c-jeu',
+   title:'EF trail D+ naturel',dur:'45 min',den:'120 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Activation',dur:'5 min · Zone 1',desc:'Marche rapide · Gammes légères'},
+          {em:'⛰️',bg:'#EBF3FF',nm:'Trail D+ naturel',dur:'35 min · Zone 2',desc:'Trail vallonné naturel · Marcher côtes >10% · Courir pentes douces · FC Zone 2 · Boire toutes 20 min'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour calme',dur:'5 min · Zone 1',desc:'Marche · Respiration'}],
+   garmin:[['Échauffement','5 min · —'],['Intervalle','35 min · Zone FC 2 — 120D+'],['Récupération','5 min · —']],
+   gnote:'Pas de répétition · 120D+ sur Epix · Zone 2 strict',
+   cle:'🔵 Réhabituer les jambes au D+ · Zone 2 prioritaire sur vitesse',past:null},
+
+  {key:'Sam17-10',date:'2026-10-17',label:'Samedi 17 octobre',phase:'base',weekLbl:'Semaine 2 — Bases trail',dot:'c-sam',
+   title:'Sortie longue — réhabituation D+',dur:'60 min',den:'200 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route départ',dur:'10 min · Zone 2',desc:'Route · Progressif'},
+          {em:'⛰️',bg:'#EBF3FF',nm:'Trail 200D+',dur:'40 min · Zone 2',desc:'Trail mixte · 200D+ · Marche nordique côtes raides · Descentes actives légères · Boire toutes 20 min'},
+          {em:'🌿',bg:'#F3E5F5',nm:'Route retour',dur:'10 min · Zone 1-2',desc:'Route calme · Finir marche 5 min'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','40 min · Zone FC 2 — 200D+'],['Récupération','10 min · Zone FC 1-2']],
+   gnote:'Pas de répétition · 200D+ = 50% D+ race · Tester chaussures trail',
+   cle:'🔵 200D+ = moitié D+ race · Freinage quadriceps en descente · Chaussures race ?',past:null},
+
+  // ── S3 CONSTRUCTION ───────────────────────────────────────────────────────
+  {key:'Mar20-10',date:'2026-10-20',label:'Mardi 20 octobre',phase:'build',weekLbl:'Semaine 3 — Construction',dot:'c-mar',
+   title:'Fractionné côtes longues 4×3min',dur:'50 min',den:'160 m',zone:'Zone 3-4',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Échauffement EF',dur:'12 min · Zone 2',desc:'Progressif · 2 min Zone 3 en fin'},
+          {em:'🔁',bg:'#FFEBEE',nm:'Répétitions montées',dur:'22 min · Zone 3-4',desc:'4× montée 3 min côte 6-8% + descente jogging récup 2 min\n→ Montée Zone 3-4 : effort 8/10 · bras actifs · petits pas · regard devant\n→ Descente jogging : ACTIVE · freinage quad · pieds sous le corps\n→ Récup complète entre chaque'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour EF',dur:'16 min · Zone 2',desc:'Route retour · Marche 5 min · Étirements quadriceps'}],
+   garmin:[['Échauffement','12 min · Zone FC 2'],['Intervalle','3 min · Zone FC 3-4 — montée'],['Récupération','2 min · Zone FC 2 — descente active'],['Récup. finale','16 min · Zone FC 2']],
+   gnote:'🔁 Répéter 4 fois · Aller-retour : montée 3min / retour descente active 2min',
+   cle:'🟢 Descentes ACTIVES = compétence race 19km · Freinage quad · Ne pas freiner avec les talons',past:null},
+
+  {key:'Jeu22-10',date:'2026-10-22',label:'Jeudi 22 octobre',phase:'build',weekLbl:'Semaine 3 — Construction',dot:'c-jeu',
+   title:'EF trail D+ spécifique',dur:'55 min',den:'280 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route EF',dur:'10 min · Zone 2',desc:'Route plat · Progressif'},
+          {em:'⛰️',bg:'#E8F5E9',nm:'Trail 280D+',dur:'35 min · Zone 2',desc:'Trail avec D+ · Marcher côtes raides · Power hiking actif · FC Zone 2 · Gel si > 45 min'},
+          {em:'🌿',bg:'#F3E5F5',nm:'Route retour',dur:'10 min · Zone 1-2',desc:'Route calme'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','35 min · Zone FC 2 — 280D+'],['Récupération','10 min · Zone FC 1-2']],
+   gnote:'Pas de répétition · 280D+ = 70% D+ race · Zone 2 stricte',
+   cle:'🟢 280D+ sur Epix · Power hiking en montée · Tester gel si > 45 min',past:null},
+
+  {key:'Sam24-10',date:'2026-10-24',label:'Samedi 24 octobre',phase:'build',weekLbl:'Semaine 3 — Construction',dot:'c-sam',
+   title:'Sortie longue — profil proche race',dur:'80 min',den:'350 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route départ',dur:'10 min · Zone 2',desc:'Route · Progressif'},
+          {em:'⛰️',bg:'#E8F5E9',nm:'Trail 350D+',dur:'60 min · Zone 2',desc:'Trail profil proche race :\n→ 1er tiers : allure EF confortable · ne pas forcer\n→ 2ème tiers : maintenir · power hiking côtes raides\n→ Dernier tiers : gérer la fatigue · marcher si nécessaire\n→ Gel à 45 min · Eau toutes 20 min · Bâtons optionnels'},
+          {em:'🌿',bg:'#F3E5F5',nm:'Route retour',dur:'10 min · Zone 1',desc:'Route · Marche · 10 min étirements'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','60 min · Zone FC 2 — 350D+'],['Récupération','10 min · Zone FC 1']],
+   gnote:'Pas de répétition · 350D+ = 87% D+ race · Tester gel et bâtons',
+   cle:'🟢 Séance clé · Tester gel + bâtons + chaussures race · Observer quadriceps en descente',past:null},
+
+  // ── S4 VOLUME PIC ─────────────────────────────────────────────────────────
+  {key:'Mar27-10',date:'2026-10-27',label:'Mardi 27 octobre',phase:'vol',weekLbl:'Semaine 4 — Volume pic',dot:'c-mar',
+   title:'Tempo côtes + descentes actives',dur:'50 min',den:'180 m',zone:'Zone 3-4',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Échauffement EF',dur:'10 min · Zone 2',desc:'Trail plat · Progressif'},
+          {em:'🔁',bg:'#FFEBEE',nm:'Blocs montée-descente',dur:'25 min · Zone 3-4',desc:'4× (montée 2 min 30 Zone 3-4 + descente active 2 min Zone 2)\n→ Montée : effort fort · bras actifs · petits pas · cadence haute · no stop\n→ Descente ACTIVE : COURIR · pas courts · freinage quad · bras écartés\n→ Récup 30 sec entre les blocs'},
+          {em:'🏃',bg:'#E8F5E9',nm:'Tempo plat',dur:'5 min · Zone 3',desc:'1× 5 min tempo plat · Simulation fin de course · Fatigue cumulée'},
+          {em:'🌿',bg:'#F3E5F5',nm:'Retour EF',dur:'10 min · Zone 2',desc:'Retour progressif · Marche 5 min · Étirements'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle 1','2 min 30 · Zone FC 3-4 — montée'],['Intervalle 2','2 min · Zone FC 2 — descente ACTIVE'],['Récup courte','30 sec · Zone FC 1'],['Récup. finale','15 min · Zone FC 2']],
+   gnote:'🔁 Répéter blocs 1+2+récup : 4 fois · Descente en COURANT pas en marchant',
+   cle:'🔵 Descente active = amortisseur naturel · Freinage quad obligatoire · Ne JAMAIS freiner avec les talons',past:null},
+
+  {key:'Jeu29-10',date:'2026-10-29',label:'Jeudi 29 octobre',phase:'vol',weekLbl:'Semaine 4 — Volume pic',dot:'c-jeu',
+   title:'Long EF trail D+ complet',dur:'60 min',den:'350 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route EF',dur:'10 min · Zone 2',desc:'Route · Progressif'},
+          {em:'⛰️',bg:'#EBF3FF',nm:'Trail 350D+',dur:'40 min · Zone 2',desc:'Trail avec 350D+ · Marcher côtes raides · Courir pentes douces · Gel à 30 min · Si fatigue résiduelle de mardi → réduire à 50 min'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Route retour',dur:'10 min · Zone 1',desc:'Route calme · Marche 5 min'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','40 min · Zone FC 2 — 350D+'],['Récupération','10 min · Zone FC 1']],
+   gnote:'Si fatigue > 6/10 → réduire à 50 min · Gel à 30 min · Objectif 350D+',
+   cle:'🔵 2j après séance dure de mardi · Écouter le corps · Gel obligatoire à 30 min',past:null},
+
+  {key:'Sam31-10',date:'2026-10-31',label:'Samedi 31 octobre',phase:'vol',weekLbl:'Semaine 4 — Volume pic',dot:'c-sam',
+   title:'🔺 SIMULATION RACE — Trail 400D+',dur:'100 min',den:'400 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route départ',dur:'10 min · Zone 2',desc:'Route · Progressif · Ne pas partir trop vite'},
+          {em:'⛰️',bg:'#FFEBEE',nm:'Trail 400D+ simulation',dur:'80 min · Zone 2',desc:'GRANDE SORTIE — Objectif 400D+ = D+ race :\n→ 1er tiers (27min) : allure EF confortable · ne pas forcer\n→ 2ème tiers (27min) : maintenir · power hiking toutes montées raides\n→ 3ème tiers (26min) : gestion fatigue · marcher si nécessaire · finir debout\n→ Gel à 40 et 70 min · Eau toutes 20 min · Bâtons recommandés · Tester TOUT l\'équipement'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Route retour',dur:'10 min · Zone 1',desc:'Route · Marche · 10 min étirements statiques après'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','80 min · Zone FC 2 — Simulation race 400D+'],['Récupération','10 min · Zone FC 1']],
+   gnote:'LA SÉANCE CLÉ · Tester TOUT : chaussures, sac, gel, eau, bâtons · Récup totale dimanche',
+   cle:'🔵 Simulation race complète · Tester TOUT l\'équipement · Récupération totale dimanche obligatoire',past:null},
+
+  // ── S5 PLATEAU ────────────────────────────────────────────────────────────
+  {key:'Mar03-11',date:'2026-11-03',label:'Mardi 3 novembre',phase:'plat',weekLbl:'Semaine 5 — Plateau',dot:'c-mar',
+   title:'Côtes modérées PLATEAU — 4×2min',dur:'45 min',den:'120 m',zone:'Zone 2-3',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Échauffement EF',dur:'12 min · Zone 2',desc:'Trail plat · Progressif'},
+          {em:'🔁',bg:'#FFF8E1',nm:'Répétitions allégées',dur:'18 min · Zone 2-3',desc:'4× montée 2 min (Zone 3 max) + descente MARCHE récup\n→ Intensité RÉDUITE vs S4 · Descente en marchant pour récupérer\n→ Observer : mêmes côtes = plus facile qu\'en S4 ?'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour EF long',dur:'15 min · Zone 2',desc:'Trail/route EF · Marche finale 5 min'}],
+   garmin:[['Échauffement','12 min · Zone FC 2'],['Intervalle','2 min · Zone FC 3 MAX — PLATEAU'],['Récupération','2 min · Zone FC 1 — descente MARCHE'],['Récup. finale','15 min · Zone FC 2']],
+   gnote:'🔁 Répéter 4 fois · 🟡 PLATEAU — descente en marchant · Intensité réduite',
+   cle:'🟡 PLATEAU : observer si les jambes se sentent + légères · Signe d\'adaptation',past:null},
+
+  {key:'Jeu05-11',date:'2026-11-05',label:'Jeudi 5 novembre',phase:'plat',weekLbl:'Semaine 5 — Plateau',dot:'c-jeu',
+   title:'EF récup active trail',dur:'55 min',den:'250 m',zone:'Zone 2',
+   blocs:[{em:'⛰️',bg:'#FFF8E1',nm:'EF trail 250D+',dur:'55 min · Zone 2',desc:'Trail naturel EF · Allure très confortable · Corps qui intègre les adaptations du pic · Légèreté et plaisir'}],
+   garmin:[['Échauffement','5 min · —'],['Intervalle','45 min · Zone FC 2 max'],['Récupération','5 min · —']],
+   gnote:'Récupération active totale · PLATEAU · Légèreté et plaisir',
+   cle:'🟡 Corps en train d\'intégrer les adaptations du pic · Aucune pression',past:null},
+
+  {key:'Sam07-11',date:'2026-11-07',label:'Samedi 7 novembre',phase:'plat',weekLbl:'Semaine 5 — Plateau',dot:'c-sam',
+   title:'Sortie longue PLATEAU',dur:'90 min',den:'350 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route départ',dur:'10 min · Zone 2',desc:'Route EF'},
+          {em:'⛰️',bg:'#FFF8E1',nm:'Trail 350D+',dur:'70 min · Zone 2',desc:'Même type de parcours que S4 · Allure plus confortable · Finaliser équipement race · Observer si + léger qu\'en S4'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Route retour',dur:'10 min · Zone 1',desc:'Route calme · Marche 5 min'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','70 min · Zone FC 2 — PLATEAU 350D+'],['Récupération','10 min · Zone FC 1']],
+   gnote:'🟡 PLATEAU — allure plus confortable que S4 · Finaliser équipement définitif',
+   cle:'🟡 Finaliser l\'équipement race · Observer si les jambes sont + légères qu\'en S4',past:null},
+
+  // ── S6 AFFÛTAGE ───────────────────────────────────────────────────────────
+  {key:'Mar10-11',date:'2026-11-10',label:'Mardi 10 novembre',phase:'aff',weekLbl:'Semaine 6 — Affûtage',dot:'c-mar',
+   title:'Fractionné côtes allure race 4×90sec',dur:'40 min',den:'120 m',zone:'Zone 3-4',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Échauffement EF',dur:'12 min · Zone 2',desc:'Trail plat · Progressif'},
+          {em:'🔁',bg:'#FCE4EC',nm:'Strides côtes race',dur:'16 min · Zone 3-4',desc:'4× montée 90 sec allure race + descente jogging récup 2 min\n→ Intensité race : Zone 3-4 · Comme en compétition\n→ Mémoriser la sensation d\'allure course en montée\n→ Récup COMPLÈTE entre chaque'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour EF',dur:'12 min · Zone 2',desc:'Trail/route · Finir progressif'}],
+   garmin:[['Échauffement','12 min · Zone FC 2'],['Intervalle','1 min 30 · Zone FC 3-4 — allure RACE'],['Récupération','2 min · Zone FC 1-2 — récup complète'],['Récup. finale','12 min · Zone FC 2']],
+   gnote:'🔁 Répéter 4 fois · Aller-retour : montée 1min30 / retour descente 2min (récup > effort)',
+   cle:'🔴 Mémoriser la sensation d\'allure race · Volume réduit mais intensité maintenue',past:null},
+
+  {key:'Jeu12-11',date:'2026-11-12',label:'Jeudi 12 novembre',phase:'aff',weekLbl:'Semaine 6 — Affûtage',dot:'c-jeu',
+   title:'EF trail affûtage léger',dur:'45 min',den:'180 m',zone:'Zone 2',
+   blocs:[{em:'⛰️',bg:'#FCE4EC',nm:'EF trail 180D+',dur:'45 min · Zone 2',desc:'Trail terrain varié · 180D+ · Allure EF stricte · Observer légèreté des jambes · Confiance montante · Vérifier équipement race'}],
+   garmin:[['Échauffement','5 min · Zone FC 2'],['Intervalle','35 min · Zone FC 2'],['Récupération','5 min · —']],
+   gnote:'Pas de répétition · Affûtage · Les jambes doivent se sentir de plus en plus légères',
+   cle:'🔴 Observer la légèreté · Forme montante = normal en affûtage · Vérifier chaussures et sac race',past:null},
+
+  {key:'Sam14-11',date:'2026-11-14',label:'Samedi 14 novembre',phase:'aff',weekLbl:'Semaine 6 — Affûtage',dot:'c-sam',
+   title:'Sortie longue affûtage −30%',dur:'65 min',den:'200 m',zone:'Zone 2',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'Route départ',dur:'10 min · Zone 2',desc:'Route EF'},
+          {em:'⛰️',bg:'#FCE4EC',nm:'Trail 200D+',dur:'45 min · Zone 2',desc:'Trail · −30% volume vs S4 · Allure confortable · Visualiser le parcours de la course · Tester gel final'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Route retour',dur:'10 min · Zone 1',desc:'Route calme · Marche finale'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','45 min · Zone FC 2 — Affûtage 200D+'],['Récupération','10 min · Zone FC 1']],
+   gnote:'Pas de répétition · −30% volume · Légèreté et confiance · Tester gel final',
+   cle:'🔴 Confiance montante · Récup totale dimanche · Bien dormir cette semaine',past:null},
+
+  // ── S7 COURSE ─────────────────────────────────────────────────────────────
+  {key:'Mar17-11',date:'2026-11-17',label:'Mardi 17 novembre',phase:'race',weekLbl:'Semaine 7 — Course',dot:'c-mar',
+   title:'Activation légère — J-5',dur:'20 min',den:'0 m',zone:'Zone 1-2',
+   blocs:[{em:'🏃',bg:'#FFF9C4',nm:'Activation légère',dur:'20 min · Zone 1-2',desc:'5 min marche + 10 min foulée très légère Zone 1-2 + 5 min marche · Juste bouger les jambes · Aucun effort · Terrain plat uniquement'}],
+   garmin:[['Échauffement','5 min · —'],['Intervalle','10 min · Zone FC 1-2 — très léger'],['Récupération','5 min · —']],
+   gnote:'Séance symbolique · Manger et dormir sont prioritaires cette semaine',
+   cle:'🏁 SEMAINE COURSE · Manger, dormir, récupérer · La course c\'est dimanche !',past:null},
+
+  {key:'Jeu19-11',date:'2026-11-19',label:'Jeudi 19 novembre',phase:'race',weekLbl:'Semaine 7 — Course',dot:'c-jeu',
+   title:'Gammes + strides plat — J-3',dur:'25 min',den:'0 m',zone:'Zone 2-3',
+   blocs:[{em:'🔥',bg:'#FFF3E0',nm:'EF très légère',dur:'10 min · Zone 2',desc:'Course très légère plat · Progressif'},
+          {em:'🔁',bg:'#FFF9C4',nm:'Strides plat',dur:'10 min · Zone 2-3',desc:'4× accélération 20 sec terrain plat + récup 1 min marche\n→ Accélérer progressivement · Pas de sprint · Réveiller les fibres'},
+          {em:'🌿',bg:'#E8F5E9',nm:'Retour calme',dur:'5 min · Zone 1',desc:'Marche · Respiration · Visualisation positive'}],
+   garmin:[['Échauffement','10 min · Zone FC 2'],['Intervalle','20 sec · Zone FC 2-3 — stride'],['Récupération','1 min · Zone FC 1 — marche'],['Récup. finale','5 min · —']],
+   gnote:'🔁 Répéter 4 fois · DERNIÈRE séance · Réveiller les jambes doucement',
+   cle:'🏁 DERNIÈRE séance avant race · Visualiser ton arrivée · Tu es prêt(e) !',past:null},
+
+  {key:'Sam21-11',date:'2026-11-21',label:'Samedi 21 novembre',phase:'race',weekLbl:'Semaine 7 — Course',dot:'c-sam',
+   title:'🏁 Veille de course — Repos',dur:'15 min',den:'0 m',zone:'Zone 1',
+   blocs:[{em:'🏃',bg:'#FFF9C4',nm:'Jogging symbolique',dur:'10 min · Zone 1',desc:'10 min jogging très lent ou marche rapide · Pas de côtes · Terrain plat uniquement'},
+          {em:'✅',bg:'#FFF9C4',nm:'Checklist race',dur:'—',desc:'✅ Sac race préparé (gel, eau, bâtons, k-way)\n✅ Chaussures et chaussettes vérifiées\n✅ Repas pâtes/riz ce soir\n✅ Boire 2-3L eau\n✅ Coucher 21h-22h · Réveil 2h avant départ'}],
+   garmin:[['Activation','10 min · Zone FC 1 — marche rapide']],
+   gnote:'VEILLE DE COURSE · Juste bouger les jambes 10 min',
+   cle:'🏁 DEMAIN C\'EST LA COURSE ! Trail 19km 400D+ · Allure EF · Power hiking · Profiter !',past:null},
+];
+
+var savedEntries=[];
+var currentKey=null;
+
+var PS={
+  recup:{bg:'#E8F5E9',border:'#2E7D32',txt:'#2E7D32',badge:'Récup'},
+  base: {bg:'#DDEEFF',border:'#1565C0',txt:'#1565C0',badge:'Bases'},
+  build:{bg:'#E8F5E9',border:'#2E7D32',txt:'#2E7D32',badge:'Construction'},
+  vol:  {bg:'#E3F2FD',border:'#1565C0',txt:'#1565C0',badge:'Volume pic'},
+  plat: {bg:'#FFF8E1',border:'#F57F17',txt:'#F57F17',badge:'Plateau'},
+  aff:  {bg:'#FCE4EC',border:'#B71C1C',txt:'#B71C1C',badge:'Affûtage'},
+  race: {bg:'#FFF9C4',border:'#B8860B',txt:'#B8860B',badge:'Course'},
+};
+
+function ps(p){return PS[p]||PS.recup;}
+
+function zonePill(z){
+  if(z.includes('4')) return 'background:#FFEBEE;color:#B71C1C;border-color:#FFCDD2';
+  if(z.includes('3')) return 'background:#FFF3E0;color:#E65100;border-color:#FFE0B2';
+  if(z.includes('2')) return 'background:#EBF3FF;color:#1565C0;border-color:#BBDEFB';
+  return 'background:#F3E5F5;color:#4A148C;border-color:#E1BEE7';
+}
+
+function getToday(){return new Date().toISOString().slice(0,10);}
+
+function findTodaySession(){
+  var td=getToday();
+  for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].date===td)return SESSIONS[i];}
+  for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].date>td)return SESSIONS[i];}
+  return SESSIONS[SESSIONS.length-1];
+}
+
+function renderSession(s){
+  var p=ps(s.phase);
+  var html='<div class="sess-card" style="background:'+p.bg+';border-color:'+p.border+'">';
+  html+='<div class="sess-head">';
+  html+='<div class="sess-date">'+s.label+' — '+p.badge+'</div>';
+  html+='<div class="sess-title">'+s.title+'</div>';
+  html+='<div class="pills">';
+  html+='<span class="pill" style="background:'+p.bg+';color:'+p.txt+';border-color:'+p.border+'">'+s.dur+'</span>';
+  if(s.den!=='0 m') html+='<span class="pill" style="background:'+p.bg+';color:'+p.txt+';border-color:'+p.border+'">'+s.den+'</span>';
+  html+='<span class="pill" style="'+zonePill(s.zone)+'">'+s.zone+'</span>';
+  html+='</div></div>';
+  html+='<div class="blocs">';
+  s.blocs.forEach(function(b){
+    html+='<div class="bloc"><div class="b-icon" style="background:'+b.bg+'">'+b.em+'</div>';
+    html+='<div class="b-info"><div class="b-name">'+b.nm+'</div>';
+    html+='<div class="b-dur">'+b.dur+'</div>';
+    html+='<div class="b-desc">'+b.desc.replace(/\n/g,'<br>')+'</div>';
+    html+='</div></div>';
+  });
+  html+='</div>';
+  html+='<div class="garmin-box">';
+  html+='<div class="garmin-ttl">⌚ Garmin Connect — étapes à entrer</div>';
+  s.garmin.forEach(function(g){html+='<div class="g-step"><span>'+g[0]+'</span><span>'+g[1]+'</span></div>';});
+  html+='<div class="g-note">'+s.gnote.replace(/\n/g,'<br>')+'</div>';
+  html+='</div>';
+  html+='<div class="key-tip"><p>'+s.cle+'</p></div>';
+  html+='</div>';
+  return html;
+}
+
+function loadToday(){
+  var s=findTodaySession();
+  currentKey=s.key;
+  document.getElementById('today-content').innerHTML=renderSession(s);
+  var p=ps(s.phase);
+  var badge=document.getElementById('hdr-badge');
+  badge.textContent=p.badge;
+  badge.style.background=p.bg;
+  badge.style.color=p.txt;
+  badge.style.border='1px solid '+p.border;
+  var race=new Date('2026-11-22');
+  var diff=Math.ceil((race-new Date())/(1000*60*60*24));
+  document.getElementById('hdr-sub').textContent='Race day : dim. 22 nov. 2026 · J-'+Math.max(0,diff);
+  document.getElementById('journal-form').style.display='block';
+}
+
+function renderCalendar(){
+  var weeks={};var weekOrder=[];
+  SESSIONS.forEach(function(s){
+    if(!weeks[s.weekLbl]){weeks[s.weekLbl]=[];weekOrder.push(s.weekLbl);}
+    weeks[s.weekLbl].push(s);
+  });
+  var td=getToday();
+  var html='';
+  weekOrder.forEach(function(wk){
+    html+='<div class="week-grp"><div class="week-lbl">'+wk+'</div>';
+    weeks[wk].forEach(function(s){
+      var p=ps(s.phase);
+      var isT=(s.date===td);
+      var extra=isT?' today-row':'';
+      var badge='';
+      if(s.done) badge='<span class="badge b-ok">✓ OK</span>';
+      else if(isT) badge='<span class="badge b-today">Aujourd\'hui</span>';
+      else badge='<span style="color:#C6C6C8;font-size:18px">›</span>';
+      html+='<div class="cal-row'+extra+'" style="background:'+p.bg+';border-color:'+p.border+'" onclick="openSession(\''+s.key+'\')">';
+      html+='<div class="cal-dot '+s.dot+'"></div>';
+      html+='<div class="cal-info"><div class="cal-date">'+s.label+'</div>';
+      html+='<div class="cal-type" style="color:'+p.txt+'">'+s.title+'</div>';
+      html+='<div class="cal-meta">'+s.dur+' · '+s.den+' · '+s.zone+'</div></div>'+badge+'</div>';
+    });
+    html+='</div>';
+  });
+  html+='<div style="background:linear-gradient(135deg,#2E7D32,#66BB6A);border-radius:13px;padding:18px;text-align:center;margin-top:4px">';
+  html+='<div style="font-size:22px;margin-bottom:6px">🏁</div>';
+  html+='<div style="font-size:17px;font-weight:700;color:#fff">Dimanche 22 novembre 2026</div>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,0.9);margin-top:4px">Trail 19km 400D+ · RACE DAY !</div>';
+  html+='<div style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px">Allure EF · Power hiking · Profiter de chaque km 🏔️</div>';
+  html+='</div>';
+  document.getElementById('cal-content').innerHTML=html;
+}
+
+function renderJournal(){
+  var hist='<div class="j-section-title">📜 Historique des séances</div>';
+  var done=SESSIONS.filter(function(s){return s.done;}).reverse();
+  done.forEach(function(s){
+    var p=ps(s.phase);
+    hist+='<div class="hist-card">';
+    hist+='<div class="hist-head"><div><div class="hist-date-lbl">'+s.label+' · '+p.badge+'</div>';
+    hist+='<div class="hist-ttl">'+s.title+'</div></div>';
+    if(s.past&&s.past.doul) hist+='<span class="badge b-ok">'+s.past.doul+'</span>';
+    hist+='</div>';
+    if(s.past&&s.past.ress) hist+='<div class="hist-body">'+s.past.ress+'</div>';
+    hist+='</div>';
+  });
+  savedEntries.forEach(function(e){
+    var card='<div class="hist-card"><div class="hist-head"><div><div class="hist-date-lbl">'+e.date+' — Enregistré</div><div class="hist-ttl">'+e.title+'</div></div><span class="badge b-ok">'+e.doul+'/10</span></div>';
+    card+='<div class="hist-body">Fatigue: '+e.fat+'/10'+(e.deniv?' · '+e.deniv:'')+(e.dur?' · '+e.dur+' min':'')+(e.ress?'<br>'+e.ress:'')+'</div></div>';
+    hist=card+hist;
+  });
+  if(savedEntries.length===0&&done.length===0){
+    hist+='<div style="text-align:center;padding:32px 16px;color:#8E8E93;font-size:14px">Aucune séance enregistrée<br>Complète les formulaires après chaque sortie 💪</div>';
+  }
+  document.getElementById('journal-hist').innerHTML=hist;
+}
+
+function openSession(key){
+  var s=SESSIONS.find(function(x){return x.key===key;});
+  if(!s)return;
+  currentKey=key;
+  document.getElementById('today-content').innerHTML=renderSession(s);
+  document.getElementById('journal-form').style.display='block';
+  switchTab('today');
+  setTimeout(function(){window.scrollTo(0,0);},50);
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+tab).classList.add('active');
+  var m={today:0,calendar:1,journal:2};
+  document.querySelectorAll('.tab-btn')[m[tab]].classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+  if(tab==='journal')renderJournal();
+}
+
+function checkDouleur(v){
+  document.getElementById('douleur-alert').style.display=parseInt(v)>=4?'block':'none';
+}
+
+function saveEntry(){
+  var s=SESSIONS.find(function(x){return x.key===currentKey;});
+  var doul=document.querySelectorAll('input[type=range]')[0].value;
+  var fat=document.querySelectorAll('input[type=range]')[1].value;
+  savedEntries.unshift({
+    date:s?s.label:'Séance',title:s?s.title:'',
+    doul:doul,fat:fat,
+    deniv:document.getElementById('ji-deniv').value,
+    dur:document.getElementById('ji-dur').value,
+    ress:document.getElementById('ji-ressenti').value,
+    notes:document.getElementById('ji-notes').value
+  });
+  // Mark as done
+  if(s){s.done=true;if(!s.past)s.past={doul:doul+'/10',fat:fat+'/10',ress:document.getElementById('ji-ressenti').value,act:''};}
+  document.getElementById('ji-deniv').value='';
+  document.getElementById('ji-dur').value='';
+  document.getElementById('ji-ressenti').value='';
+  document.getElementById('ji-notes').value='';
+  document.querySelectorAll('input[type=range]').forEach(function(r){r.value=0;});
+  document.getElementById('sv1').innerHTML='0<span style="font-size:14px;color:#8E8E93">/10</span>';
+  document.getElementById('sv2').innerHTML='0<span style="font-size:14px;color:#8E8E93">/10</span>';
+  document.getElementById('douleur-alert').style.display='none';
+  var msg=document.getElementById('saved-msg');
+  msg.style.display='block';
+  setTimeout(function(){msg.style.display='none';renderCalendar();renderJournal();switchTab('journal');},1200);
+}
+
+loadToday();
+renderCalendar();
+</script>
+</body>
+</html>
